@@ -27,7 +27,7 @@ GLWidget::GLWidget(QWidget *parent)
     this->zoomAmount = 130.0f;
     this->earthRotation = 0.0f;
     this->moonPosition = 0.0f;
-    this->automaticMoonMovement = true;
+    this->automaticMoonMovement = false;
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     timer.start(16);
 }
@@ -129,11 +129,12 @@ void GLWidget::paintGL() {
 
     if(automaticMoonMovement) {
         if(moonPosition >= 360) {
-            moonPosition = 0.5f;
+            moonPosition = 0.0f;
         } else {
             moonPosition += 0.2f;
         }
     }
+
 }
 
 // Create Earth

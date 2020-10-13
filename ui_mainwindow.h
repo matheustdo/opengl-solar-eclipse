@@ -167,7 +167,7 @@ public:
 
         automaticMoonMovementCheckBox = new QCheckBox(centralWidget);
         automaticMoonMovementCheckBox->setObjectName(QStringLiteral("automaticMoonMovementCheckBox"));
-        automaticMoonMovementCheckBox->setChecked(true);
+        automaticMoonMovementCheckBox->setChecked(false);
 
         verticalLayout->addWidget(automaticMoonMovementCheckBox);
 

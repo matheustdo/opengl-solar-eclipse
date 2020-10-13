@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -36,8 +37,11 @@ private slots:
 
     void on_moonPositionSlider_sliderReleased();
 
+    void TimerSlot();
+
 private:
     Ui::MainWindow *ui;
+    QTimer timer;
 };
 
 #endif // MAINWINDOW_H

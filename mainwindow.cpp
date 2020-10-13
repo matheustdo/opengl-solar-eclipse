@@ -8,11 +8,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(&timer, &QTimer::timeout, this, &MainWindow::TimerSlot);
+    timer.start(16);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::TimerSlot()
+{
+    this->ui->moonPositionSlider->setValue(this->ui->widget->moonPosition);
 }
 
 void MainWindow::on_zoomAmountSlider_valueChanged(int value)

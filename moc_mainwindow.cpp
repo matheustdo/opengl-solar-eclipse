@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[18];
-    char stringdata0[396];
+    QByteArrayData data[19];
+    char stringdata0[406];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -48,7 +48,8 @@ QT_MOC_LITERAL(13, 268, 5), // "event"
 QT_MOC_LITERAL(14, 274, 40), // "on_automaticMoonMovementCheck..."
 QT_MOC_LITERAL(15, 315, 7), // "checked"
 QT_MOC_LITERAL(16, 323, 35), // "on_moonPositionSlider_sliderP..."
-QT_MOC_LITERAL(17, 359, 36) // "on_moonPositionSlider_sliderR..."
+QT_MOC_LITERAL(17, 359, 36), // "on_moonPositionSlider_sliderR..."
+QT_MOC_LITERAL(18, 396, 9) // "TimerSlot"
 
     },
     "MainWindow\0on_zoomAmountSlider_valueChanged\0"
@@ -60,7 +61,8 @@ QT_MOC_LITERAL(17, 359, 36) // "on_moonPositionSlider_sliderR..."
     "arg1\0keyPressEvent\0QKeyEvent*\0event\0"
     "on_automaticMoonMovementCheckBox_clicked\0"
     "checked\0on_moonPositionSlider_sliderPressed\0"
-    "on_moonPositionSlider_sliderReleased"
+    "on_moonPositionSlider_sliderReleased\0"
+    "TimerSlot"
 };
 #undef QT_MOC_LITERAL
 
@@ -70,7 +72,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -78,16 +80,17 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   64,    2, 0x08 /* Private */,
-       4,    1,   67,    2, 0x08 /* Private */,
-       5,    1,   70,    2, 0x08 /* Private */,
-       6,    1,   73,    2, 0x08 /* Private */,
-       8,    1,   76,    2, 0x08 /* Private */,
-       9,    1,   79,    2, 0x08 /* Private */,
-      11,    1,   82,    2, 0x08 /* Private */,
-      14,    1,   85,    2, 0x08 /* Private */,
-      16,    0,   88,    2, 0x08 /* Private */,
-      17,    0,   89,    2, 0x08 /* Private */,
+       1,    1,   69,    2, 0x08 /* Private */,
+       4,    1,   72,    2, 0x08 /* Private */,
+       5,    1,   75,    2, 0x08 /* Private */,
+       6,    1,   78,    2, 0x08 /* Private */,
+       8,    1,   81,    2, 0x08 /* Private */,
+       9,    1,   84,    2, 0x08 /* Private */,
+      11,    1,   87,    2, 0x08 /* Private */,
+      14,    1,   90,    2, 0x08 /* Private */,
+      16,    0,   93,    2, 0x08 /* Private */,
+      17,    0,   94,    2, 0x08 /* Private */,
+      18,    0,   95,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    3,
@@ -98,6 +101,7 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void, QMetaType::QString,   10,
     QMetaType::Void, 0x80000000 | 12,   13,
     QMetaType::Void, QMetaType::Bool,   15,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -120,6 +124,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 7: _t->on_automaticMoonMovementCheckBox_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 8: _t->on_moonPositionSlider_sliderPressed(); break;
         case 9: _t->on_moonPositionSlider_sliderReleased(); break;
+        case 10: _t->TimerSlot(); break;
         default: ;
         }
     }
@@ -150,13 +155,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }
