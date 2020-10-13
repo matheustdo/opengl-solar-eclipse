@@ -16,17 +16,18 @@ float LightSpc[] = { -0.2f, -0.2f, -0.2f, 1.0f };	// Specular Light Values
 float MatClean[] = { 0.0f, 0.0f, 0.0f, 1.0 }; // No Material Values
 
 GLUquadricObj *quadric; // Quadric
-GLuint TextureId[1];
+GLuint TextureId[2];
 
 // Constructor
 GLWidget::GLWidget(QWidget *parent)
     :QGLWidget(parent) {
     this->horizontalAngle = 30*M_PI/180.0f;
     this->verticalAngle = 70*M_PI/180.0f;
-    this->horizontalPosition = 0;
-    this->zoom = 15;
-    this->earthRot = 0;
-    this->moonPos = 0;
+    this->cameraPosition = 18.0f;
+    this->zoomAmount = 130.0f;
+    this->earthRotation = 0.0f;
+    this->moonPosition = 0.0f;
+    this->automaticMoonMovement = true;
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     timer.start(16);
 }
@@ -51,15 +52,15 @@ void GLWidget::initializeGL() {
     glLightfv(GL_LIGHT1, GL_SPECULAR, LightSunFxSpc);	// Set Light1 Ambience
     glEnable(GL_COLOR_MATERIAL); // Enable Color Material
     glEnable(GL_LIGHTING); // Enable Lighting
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Define the operation of blending
+    glEnable(GL_BLEND); // Enable Bending
 
-    QImage earthImg;
+    QImage earthImg; // Load Earth Texture
     if(!earthImg.load("Assets/Earth.bmp")) {
         exit(1);
     }
 
-    QImage moonImg;
+    QImage moonImg; // Load Moon Texture
     if(!moonImg.load("Assets/Moon.bmp")) {
         exit(1);
     }
@@ -109,9 +110,9 @@ void GLWidget::paintGL() {
     glLightfv(GL_LIGHT1, GL_POSITION, LightSunFxPos); // Set Light1 Position before gluLookAt
 
     if(verticalAngle < M_PI) {
-        gluLookAt(horizontalPosition + (165 - zoom)*cos(horizontalAngle)*sin(verticalAngle), (165 - zoom)*cos(verticalAngle), (165 - zoom)*sin(horizontalAngle)*sinf(verticalAngle), horizontalPosition, 0, 0, 0, 1, 0);
+        gluLookAt(cameraPosition + (165 - zoomAmount)*cos(horizontalAngle)*sin(verticalAngle), (165 - zoomAmount)*cos(verticalAngle), (165 - zoomAmount)*sin(horizontalAngle)*sinf(verticalAngle), cameraPosition, 0, 0, 0, 1, 0);
     } else {
-        gluLookAt(horizontalPosition + (165 - zoom)*cos(horizontalAngle)*sin(verticalAngle), (165 - zoom)*cos(verticalAngle), (165 - zoom)*sin(horizontalAngle)*sinf(verticalAngle), horizontalPosition, 0, 0, 0, -1, 0);
+        gluLookAt(cameraPosition + (165 - zoomAmount)*cos(horizontalAngle)*sin(verticalAngle), (165 - zoomAmount)*cos(verticalAngle), (165 - zoomAmount)*sin(horizontalAngle)*sinf(verticalAngle), cameraPosition, 0, 0, 0, -1, 0);
     }
 
     glLightfv(GL_LIGHT0, GL_POSITION, LightPos); // Set Light Position
@@ -124,8 +125,15 @@ void GLWidget::paintGL() {
     createSun(); // Create Sun
     glDisable(GL_LIGHT1); // Disable Light1
 
-    earthRot += 0.1f;
+    earthRotation += 0.1f;
 
+    if(automaticMoonMovement) {
+        if(moonPosition >= 360) {
+            moonPosition = 0.5f;
+        } else {
+            moonPosition += 0.2f;
+        }
+    }
 }
 
 // Create Earth
@@ -148,7 +156,7 @@ void GLWidget::createEarth() {
 
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
     glRotatef(23.0f, 0.0f, 1.0f, 0.0f);
-    glRotatef(-earthRot, 0.0f, 0.0f, 1.0f);
+    glRotatef(-earthRotation, 0.0f, 0.0f, 1.0f);
 
     gluQuadricDrawStyle(quadric, GLU_FILL);
     gluQuadricNormals(quadric, GL_SMOOTH);
@@ -189,7 +197,7 @@ void GLWidget::createMoon() {
 
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
     glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
-    glRotatef(moonPos, 0.0f, 0.0f, 1.0f);
+    glRotatef(moonPosition, 0.0f, 0.0f, 1.0f);
     glTranslatef(30.0f, 0.0f, 0.0f);
     gluQuadricDrawStyle(quadric, GLU_FILL);
     gluQuadricNormals(quadric, GL_SMOOTH);
@@ -200,13 +208,13 @@ void GLWidget::createMoon() {
     glPopMatrix();
 
     // Create the shadow to the Earh
-    if(moonPos < 15 || moonPos > 345) {
+    if(moonPosition < 15 || moonPosition > 345) {
         glPushMatrix();
 
         glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
         glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
         glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
-        glRotatef(moonPos*9, 0.0f, 0.0f, 1.0f);
+        glRotatef(moonPosition*9, 0.0f, 0.0f, 1.0f);
         glTranslatef(1.2f, 0.0f, 0.0f);
         gluSphere(quadric, 3.0f, 80, 80);
 

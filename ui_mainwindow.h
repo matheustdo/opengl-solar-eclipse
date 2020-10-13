@@ -13,6 +13,8 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -32,26 +34,30 @@ public:
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *verticalLayout;
-    QLabel *label_5;
+    QLabel *configPresetLabel;
+    QComboBox *configPresetComboBox;
+    QLabel *cameraPositionLabel;
     QSlider *cameraPositionSlider;
-    QLabel *label;
-    QSlider *zoomSlider;
-    QLabel *label_3;
+    QLabel *zoomAmountLabel;
+    QSlider *zoomAmountSlider;
+    QLabel *horizontalViewLabel;
     QSlider *horizontalViewSlider;
-    QLabel *label_4;
+    QLabel *verticalViewLabel;
     QSlider *verticalViewSlider;
-    QLabel *label_2;
-    QSlider *moonPosSlider;
+    QLabel *moonPositionLabel;
+    QSlider *moonPositionSlider;
+    QCheckBox *automaticMoonMovementCheckBox;
+    QLabel *label;
     QSpacerItem *verticalSpacer;
-    QPushButton *pushButton;
+    QPushButton *exitButton;
     GLWidget *widget;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(800, 500);
-        MainWindow->setMinimumSize(QSize(800, 500));
+        MainWindow->resize(900, 500);
+        MainWindow->setMinimumSize(QSize(900, 500));
         MainWindow->setBaseSize(QSize(0, 0));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
@@ -64,10 +70,21 @@ public:
         verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(9, 9, -1, 9);
-        label_5 = new QLabel(centralWidget);
-        label_5->setObjectName(QStringLiteral("label_5"));
+        configPresetLabel = new QLabel(centralWidget);
+        configPresetLabel->setObjectName(QStringLiteral("configPresetLabel"));
 
-        verticalLayout->addWidget(label_5);
+        verticalLayout->addWidget(configPresetLabel);
+
+        configPresetComboBox = new QComboBox(centralWidget);
+        configPresetComboBox->setObjectName(QStringLiteral("configPresetComboBox"));
+
+        verticalLayout->addWidget(configPresetComboBox);
+
+        cameraPositionLabel = new QLabel(centralWidget);
+        cameraPositionLabel->setObjectName(QStringLiteral("cameraPositionLabel"));
+        cameraPositionLabel->setEnabled(true);
+
+        verticalLayout->addWidget(cameraPositionLabel);
 
         cameraPositionSlider = new QSlider(centralWidget);
         cameraPositionSlider->setObjectName(QStringLiteral("cameraPositionSlider"));
@@ -78,30 +95,31 @@ public:
         cameraPositionSlider->setSizePolicy(sizePolicy);
         cameraPositionSlider->setMinimum(-30);
         cameraPositionSlider->setMaximum(500);
+        cameraPositionSlider->setValue(18);
         cameraPositionSlider->setOrientation(Qt::Horizontal);
 
         verticalLayout->addWidget(cameraPositionSlider);
 
-        label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
+        zoomAmountLabel = new QLabel(centralWidget);
+        zoomAmountLabel->setObjectName(QStringLiteral("zoomAmountLabel"));
 
-        verticalLayout->addWidget(label);
+        verticalLayout->addWidget(zoomAmountLabel);
 
-        zoomSlider = new QSlider(centralWidget);
-        zoomSlider->setObjectName(QStringLiteral("zoomSlider"));
-        sizePolicy.setHeightForWidth(zoomSlider->sizePolicy().hasHeightForWidth());
-        zoomSlider->setSizePolicy(sizePolicy);
-        zoomSlider->setMinimum(15);
-        zoomSlider->setMaximum(150);
-        zoomSlider->setValue(15);
-        zoomSlider->setOrientation(Qt::Horizontal);
+        zoomAmountSlider = new QSlider(centralWidget);
+        zoomAmountSlider->setObjectName(QStringLiteral("zoomAmountSlider"));
+        sizePolicy.setHeightForWidth(zoomAmountSlider->sizePolicy().hasHeightForWidth());
+        zoomAmountSlider->setSizePolicy(sizePolicy);
+        zoomAmountSlider->setMinimum(15);
+        zoomAmountSlider->setMaximum(150);
+        zoomAmountSlider->setValue(130);
+        zoomAmountSlider->setOrientation(Qt::Horizontal);
 
-        verticalLayout->addWidget(zoomSlider);
+        verticalLayout->addWidget(zoomAmountSlider);
 
-        label_3 = new QLabel(centralWidget);
-        label_3->setObjectName(QStringLiteral("label_3"));
+        horizontalViewLabel = new QLabel(centralWidget);
+        horizontalViewLabel->setObjectName(QStringLiteral("horizontalViewLabel"));
 
-        verticalLayout->addWidget(label_3);
+        verticalLayout->addWidget(horizontalViewLabel);
 
         horizontalViewSlider = new QSlider(centralWidget);
         horizontalViewSlider->setObjectName(QStringLiteral("horizontalViewSlider"));
@@ -113,10 +131,10 @@ public:
 
         verticalLayout->addWidget(horizontalViewSlider);
 
-        label_4 = new QLabel(centralWidget);
-        label_4->setObjectName(QStringLiteral("label_4"));
+        verticalViewLabel = new QLabel(centralWidget);
+        verticalViewLabel->setObjectName(QStringLiteral("verticalViewLabel"));
 
-        verticalLayout->addWidget(label_4);
+        verticalLayout->addWidget(verticalViewLabel);
 
         verticalViewSlider = new QSlider(centralWidget);
         verticalViewSlider->setObjectName(QStringLiteral("verticalViewSlider"));
@@ -125,36 +143,47 @@ public:
         verticalViewSlider->setSizePolicy(sizePolicy);
         verticalViewSlider->setMinimum(0);
         verticalViewSlider->setMaximum(358);
-        verticalViewSlider->setValue(69);
+        verticalViewSlider->setValue(70);
         verticalViewSlider->setOrientation(Qt::Horizontal);
 
         verticalLayout->addWidget(verticalViewSlider);
 
-        label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QStringLiteral("label_2"));
+        moonPositionLabel = new QLabel(centralWidget);
+        moonPositionLabel->setObjectName(QStringLiteral("moonPositionLabel"));
 
-        verticalLayout->addWidget(label_2);
+        verticalLayout->addWidget(moonPositionLabel);
 
-        moonPosSlider = new QSlider(centralWidget);
-        moonPosSlider->setObjectName(QStringLiteral("moonPosSlider"));
-        sizePolicy.setHeightForWidth(moonPosSlider->sizePolicy().hasHeightForWidth());
-        moonPosSlider->setSizePolicy(sizePolicy);
-        moonPosSlider->setMinimumSize(QSize(160, 0));
-        moonPosSlider->setMinimum(0);
-        moonPosSlider->setMaximum(360);
-        moonPosSlider->setValue(0);
-        moonPosSlider->setOrientation(Qt::Horizontal);
+        moonPositionSlider = new QSlider(centralWidget);
+        moonPositionSlider->setObjectName(QStringLiteral("moonPositionSlider"));
+        sizePolicy.setHeightForWidth(moonPositionSlider->sizePolicy().hasHeightForWidth());
+        moonPositionSlider->setSizePolicy(sizePolicy);
+        moonPositionSlider->setMinimumSize(QSize(160, 0));
+        moonPositionSlider->setMinimum(0);
+        moonPositionSlider->setMaximum(360);
+        moonPositionSlider->setValue(0);
+        moonPositionSlider->setOrientation(Qt::Horizontal);
 
-        verticalLayout->addWidget(moonPosSlider);
+        verticalLayout->addWidget(moonPositionSlider);
+
+        automaticMoonMovementCheckBox = new QCheckBox(centralWidget);
+        automaticMoonMovementCheckBox->setObjectName(QStringLiteral("automaticMoonMovementCheckBox"));
+        automaticMoonMovementCheckBox->setChecked(true);
+
+        verticalLayout->addWidget(automaticMoonMovementCheckBox);
+
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+
+        verticalLayout->addWidget(label);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout->addItem(verticalSpacer);
 
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
+        exitButton = new QPushButton(centralWidget);
+        exitButton->setObjectName(QStringLiteral("exitButton"));
 
-        verticalLayout->addWidget(pushButton);
+        verticalLayout->addWidget(exitButton);
 
 
         horizontalLayout->addLayout(verticalLayout);
@@ -172,7 +201,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
-        QObject::connect(pushButton, SIGNAL(released()), MainWindow, SLOT(close()));
+        QObject::connect(exitButton, SIGNAL(released()), MainWindow, SLOT(close()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -180,12 +209,21 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Solar Eclipse Simulator", Q_NULLPTR));
-        label_5->setText(QApplication::translate("MainWindow", "Camera Position", Q_NULLPTR));
-        label->setText(QApplication::translate("MainWindow", "Zoom Amount:", Q_NULLPTR));
-        label_3->setText(QApplication::translate("MainWindow", "Horizontal View:", Q_NULLPTR));
-        label_4->setText(QApplication::translate("MainWindow", "Vertical View:", Q_NULLPTR));
-        label_2->setText(QApplication::translate("MainWindow", "Moon Position:", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("MainWindow", "Exit", Q_NULLPTR));
+        configPresetLabel->setText(QApplication::translate("MainWindow", "Config Preset:", Q_NULLPTR));
+        configPresetComboBox->clear();
+        configPresetComboBox->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "Preset 1", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Preset 2", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Preset 3", Q_NULLPTR)
+        );
+        cameraPositionLabel->setText(QApplication::translate("MainWindow", "Camera Position (18):", Q_NULLPTR));
+        zoomAmountLabel->setText(QApplication::translate("MainWindow", "Zoom Amount (130):", Q_NULLPTR));
+        horizontalViewLabel->setText(QApplication::translate("MainWindow", "Horizontal View (30):", Q_NULLPTR));
+        verticalViewLabel->setText(QApplication::translate("MainWindow", "Vertical View (70):", Q_NULLPTR));
+        moonPositionLabel->setText(QApplication::translate("MainWindow", "Moon Position (0):", Q_NULLPTR));
+        automaticMoonMovementCheckBox->setText(QApplication::translate("MainWindow", "Automatic Moon Movement", Q_NULLPTR));
+        label->setText(QApplication::translate("MainWindow", "Press f1 to toggle fullscreen", Q_NULLPTR));
+        exitButton->setText(QApplication::translate("MainWindow", "Exit", Q_NULLPTR));
     } // retranslateUi
 
 };

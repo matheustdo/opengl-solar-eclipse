@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>900</width>
     <height>500</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
+    <width>900</width>
     <height>500</height>
    </size>
   </property>
@@ -51,9 +51,38 @@
        <number>9</number>
       </property>
       <item>
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="configPresetLabel">
         <property name="text">
-         <string>Camera Position</string>
+         <string>Config Preset:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="configPresetComboBox">
+        <item>
+         <property name="text">
+          <string>Preset 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Preset 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Preset 3</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="cameraPositionLabel">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Camera Position (18):</string>
         </property>
        </widget>
       </item>
@@ -71,20 +100,23 @@
         <property name="maximum">
          <number>500</number>
         </property>
+        <property name="value">
+         <number>18</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="zoomAmountLabel">
         <property name="text">
-         <string>Zoom Amount:</string>
+         <string>Zoom Amount (130):</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QSlider" name="zoomSlider">
+       <widget class="QSlider" name="zoomAmountSlider">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -98,7 +130,7 @@
          <number>150</number>
         </property>
         <property name="value">
-         <number>15</number>
+         <number>130</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -106,9 +138,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="horizontalViewLabel">
         <property name="text">
-         <string>Horizontal View:</string>
+         <string>Horizontal View (30):</string>
         </property>
        </widget>
       </item>
@@ -132,9 +164,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="verticalViewLabel">
         <property name="text">
-         <string>Vertical View:</string>
+         <string>Vertical View (70):</string>
         </property>
        </widget>
       </item>
@@ -156,7 +188,7 @@
          <number>358</number>
         </property>
         <property name="value">
-         <number>69</number>
+         <number>70</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -164,14 +196,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="moonPositionLabel">
         <property name="text">
-         <string>Moon Position:</string>
+         <string>Moon Position (0):</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QSlider" name="moonPosSlider">
+       <widget class="QSlider" name="moonPositionSlider">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -199,6 +231,23 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="automaticMoonMovementCheckBox">
+        <property name="text">
+         <string>Automatic Moon Movement</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Press f1 to toggle fullscreen</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -212,7 +261,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="exitButton">
         <property name="text">
          <string>Exit</string>
         </property>
@@ -245,18 +294,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton</sender>
+   <sender>exitButton</sender>
    <signal>released()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>470</y>
+     <x>102</x>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel">
-     <x>46</x>
-     <y>272</y>
+     <x>115</x>
+     <y>424</y>
     </hint>
    </hints>
   </connection>

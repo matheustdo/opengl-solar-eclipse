@@ -20,10 +20,11 @@ public:
     void createSun();
 
     float horizontalAngle, verticalAngle;
-    float horizontalPosition;
-    int zoom;
-    float earthRot;
-    int moonPos;
+    float cameraPosition;
+    int zoomAmount;
+    float earthRotation;
+    float moonPosition;
+    bool automaticMoonMovement;
 
 private:
     QTimer timer;
