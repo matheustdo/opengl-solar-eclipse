@@ -44,3 +44,6 @@ win32 {
 unix {
     LIBS += -lGL -lGLU
 }
+
+DISTFILES += \
+    Assets/earth.jpg

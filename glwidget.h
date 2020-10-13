@@ -15,12 +15,12 @@ public:
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
-    void createEarth(int radius, float angle);
-    void createMoon(int radius, float angle);
-    void createSun(int radius, float angle);
+    void createEarth();
+    void createMoon();
+    void createSun();
 
-    float horizontalAngle;
-    float verticalAngle;
+    float horizontalAngle, verticalAngle;
+    float horizontalPosition;
     int zoom;
     float earthRot;
     int moonPos;

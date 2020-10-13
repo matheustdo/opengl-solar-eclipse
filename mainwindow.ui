@@ -51,6 +51,32 @@
        <number>9</number>
       </property>
       <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Camera Position</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="cameraPositionSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimum">
+         <number>-30</number>
+        </property>
+        <property name="maximum">
+         <number>500</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Zoom Amount:</string>

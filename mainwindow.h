@@ -24,6 +24,10 @@ private slots:
 
     void on_verticalViewSlider_valueChanged(int value);
 
+    void keyPressEvent(QKeyEvent *event);
+
+    void on_cameraPositionSlider_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 };

@@ -3,25 +3,26 @@
 #include <GL/glu.h>
 #include <math.h>
 
-float LightSunFxPos[] = { 0.0f, 0.0f, 1.0f, 0.0f }; // Light Position Values
-float LightSunFxAmb[] = { 1.0f, 1.0f, 0.0f, 1.0f}; // Ambient Light Values
-float LightSunFxDif[] = { 1.0f, 1.0f, 1.0f, 1.0f}; // Diffuse Light Values
-float LightSunFxSpc[] = {1.0f, 1.0f, 1.0f, 1.0f};	// Specular Light Values
+float LightSunFxPos[] = { 0.0f, 0.0f, 1.0f, 0.0f }; // Sun Light Effect Position Values
+float LightSunFxAmb[] = { 1.0f, 0.8f, 0.0f, 1.0f }; // Ambient Sun Light Effect Values
+float LightSunFxDif[] = { 1.0f, 0.4f, 1.0f, 1.0f }; // Diffuse Sun Light Effect Values
+float LightSunFxSpc[] = { 1.0f, 1.0f, 1.0f, 1.0f };	// Specular Sun Light Effect Values
 
 float LightPos[] = { 60.0f, 0.0f, 0.0f, 0.0f }; // Light Position Values
-float LightAmb[] = { 0.2f, 0.2f, 0.2f, 1.0f}; // Ambient Light Values
-float LightDif[] = { 0.6f, 0.6f, 0.6f, 1.0f}; // Diffuse Light Values
-float LightSpc[] = {-0.2f, -0.2f, -0.2f, 1.0f};	// Specular Light Values
+float LightAmb[] = { 0.2f, 0.2f, 0.2f, 1.0f }; // Ambient Light Values
+float LightDif[] = { 0.6f, 0.6f, 0.6f, 1.0f }; // Diffuse Light Values
+float LightSpc[] = { -0.2f, -0.2f, -0.2f, 1.0f };	// Specular Light Values
 
 float MatClean[] = { 0.0f, 0.0f, 0.0f, 1.0 }; // No Material Values
 
-GLUquadricObj *quadric;
+GLUquadricObj *quadric; // Quadric
 
 // Constructor
 GLWidget::GLWidget(QWidget *parent)
     :QGLWidget(parent) {
     this->horizontalAngle = 30*M_PI/180.0f;
     this->verticalAngle = 70*M_PI/180.0f;
+    this->horizontalPosition = 0;
     this->zoom = 15;
     this->earthRot = 0;
     this->moonPos = 0;
@@ -48,6 +49,7 @@ void GLWidget::initializeGL() {
     glLightfv(GL_LIGHT1, GL_AMBIENT, LightSunFxAmb);	// Set Light1 Ambience
     glLightfv(GL_LIGHT1, GL_DIFFUSE, LightSunFxDif);	// Set Light1 Ambience
     glLightfv(GL_LIGHT1, GL_SPECULAR, LightSunFxSpc);	// Set Light1 Ambience
+    glEnable(GL_COLOR_MATERIAL); // Enable Color Material
     glEnable(GL_LIGHTING); // Enable Lighting
 
     quadric = gluNewQuadric(); // Initialize Quadratic
@@ -76,92 +78,111 @@ void GLWidget::paintGL() {
     glMatrixMode(GL_MODELVIEW); // Select matrix matrix
     glLoadIdentity(); // Reset current modelview matrix
 
-
     glLightfv(GL_LIGHT1, GL_POSITION, LightSunFxPos); // Set Light1 Position before gluLookAt
 
     if(verticalAngle < M_PI) {
-        gluLookAt((165 - zoom)*cos(horizontalAngle)*sin(verticalAngle), (165 - zoom)*cos(verticalAngle), (165 - zoom)*sin(horizontalAngle)*sinf(verticalAngle), 0, 0, 0, 0, 1, 0);
+        gluLookAt(horizontalPosition + (165 - zoom)*cos(horizontalAngle)*sin(verticalAngle), (165 - zoom)*cos(verticalAngle), (165 - zoom)*sin(horizontalAngle)*sinf(verticalAngle), horizontalPosition, 0, 0, 0, 1, 0);
     } else {
-        gluLookAt((165 - zoom)*cos(horizontalAngle)*sin(verticalAngle), (165 - zoom)*cos(verticalAngle), (165 - zoom)*sin(horizontalAngle)*sinf(verticalAngle), 0, 0, 0, 0, -1, 0);
+        gluLookAt(horizontalPosition + (165 - zoom)*cos(horizontalAngle)*sin(verticalAngle), (165 - zoom)*cos(verticalAngle), (165 - zoom)*sin(horizontalAngle)*sinf(verticalAngle), horizontalPosition, 0, 0, 0, -1, 0);
     }
 
-    glEnable(GL_LIGHT0); // Enable Light0
     glLightfv(GL_LIGHT0, GL_POSITION, LightPos); // Set Light Position
-    createEarth(1, 23.0f); // Create Earth
-    createMoon(1, 0.0f); // Create Moon
+    glEnable(GL_LIGHT0); // Enable Light0
+    createEarth(); // Create Earth
+    createMoon(); // Create Moon
+
     glDisable(GL_LIGHT0); // Disable Light0
 
     glEnable(GL_LIGHT1); // Enable Light1
-    createSun(1, 0.0f); // Create Sun
+    createSun(); // Create Sun
     glDisable(GL_LIGHT1); // Disable Light1
 
     earthRot += 0.1f;
 
 }
 
-void GLWidget::createEarth(int moonRadius, float angle) {
-    GLfloat material_ambient[] = { 0.0f, 0.0f, 0.15f };
+// Create Earth
+void GLWidget::createEarth() {
+    GLfloat MatAmb[] = { 0.0f, 0.0f, 0.0f };
 
+    // Create the Earth
     glPushMatrix();
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_COLOR_MATERIAL);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, MatAmb);
     glMaterialfv(GL_FRONT, GL_EMISSION, MatClean);
     glColorMaterial(GL_FRONT, GL_DIFFUSE);
-    glEnable(GL_COLOR_MATERIAL);
     glColor3f(0.0f, 0.0f, 1.0f);
 
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    glRotatef(angle, 0.0f, 1.0f, 0.0f);
+    glRotatef(23.0f, 0.0f, 1.0f, 0.0f);
     glRotatef(earthRot, 0.0f, 0.0f, 1.0f);
-    gluSphere(quadric, moonRadius*4, 20, 20);
+    gluSphere(quadric, 4, 40, 40);
+
+    glPopMatrix();
+
+    // Create the shadow to the Moon
+    glPushMatrix();
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glTranslatef(-30.0f, 0.0f, 0.0f);
+    glScalef(0.5f, 0.3f, 1.0f);
+    gluSphere(quadric, 9, 80, 80);
 
     glPopMatrix();
 }
 
-void GLWidget::createMoon(int moonRadius, float angle) {
-    GLfloat material_ambient[] = { 0.0f, 0.0f, 0.0f };
+// Create Moon
+void GLWidget::createMoon() {
+    GLfloat MatAmb[] = { 0.0f, 0.0f, 0.0f };
 
+    // Create the Moon
     glPushMatrix();
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_COLOR_MATERIAL);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, MatAmb);
     glMaterialfv(GL_FRONT, GL_EMISSION, MatClean);
     glColorMaterial(GL_FRONT, GL_DIFFUSE);
-    glEnable(GL_COLOR_MATERIAL);
     glColor3f(1.0f, 1.0f, 1.0f);
 
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    glRotatef(angle, 0.0f, 1.0f, 0.0f);
+    glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
     glRotatef(moonPos, 0.0f, 0.0f, 1.0f);
     glTranslatef(30.0f, 0.0f, 0.0f);
-    gluSphere(quadric, moonRadius, 20, 20);
+    gluSphere(quadric, 1, 20, 20);
 
     glPopMatrix();
+
+    // Create the shadow to the Earh
+    if(moonPos < 15 || moonPos > 345) {
+        glPushMatrix();
+
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+        glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
+        glRotatef(moonPos*9, 0.0f, 0.0f, 1.0f);
+        glTranslatef(1.2f, 0.0f, 0.0f);
+        gluSphere(quadric, 3.0f, 80, 80);
+
+        glPopMatrix();
+    }
 }
 
-void GLWidget::createSun(int moonRadius, float angle) {
-    GLfloat material_ambient[] = { 1.0f, 0.7f, 0.0f };
+// Create Sun
+void GLWidget::createSun() {
+    GLfloat MatAmb[] = { 1.0f, 0.7f, 0.0f };
 
     glPushMatrix();
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_COLOR_MATERIAL);
-    //glMaterialfv(GL_FRONT, GL_AMBIENT, MatClean);
-    //glMaterialfv(GL_FRONT, GL_EMISSION, material_ambient);
-    //glColorMaterial(GL_FRONT, GL_EMISSION);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, MatAmb);
     glMaterialfv(GL_FRONT, GL_EMISSION, MatClean);
     glColorMaterial(GL_FRONT, GL_DIFFUSE);
-
-    glEnable(GL_COLOR_MATERIAL);
-    glColor3f(1.0f, 8.0f, 0.6f);
+    glColor3f(1.0f, 1.0f, 0.7f);
 
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    glRotatef(angle, 0.0f, 1.0f, 0.0f);
-    glTranslatef(-50.0f, 0.0f, 0.0f);
-    gluSphere(quadric, moonRadius*20, 20, 20);
+    glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
+    glTranslatef(500.0f, 0.0f, 0.0f);
+    gluSphere(quadric, 20, 20, 20);
 
     glPopMatrix();
 }
