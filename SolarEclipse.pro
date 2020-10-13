@@ -46,4 +46,5 @@ unix {
 }
 
 DISTFILES += \
-    Assets/earth.jpg
+    Assets/Earth.bmp \
+    Assets/Moon.bmp

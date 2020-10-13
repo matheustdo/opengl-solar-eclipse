@@ -16,6 +16,7 @@ float LightSpc[] = { -0.2f, -0.2f, -0.2f, 1.0f };	// Specular Light Values
 float MatClean[] = { 0.0f, 0.0f, 0.0f, 1.0 }; // No Material Values
 
 GLUquadricObj *quadric; // Quadric
+GLuint TextureId[1];
 
 // Constructor
 GLWidget::GLWidget(QWidget *parent)
@@ -31,8 +32,7 @@ GLWidget::GLWidget(QWidget *parent)
 }
 
 // Empty destructor
-GLWidget::~GLWidget() {
-}
+GLWidget::~GLWidget() {}
 
 // Initialize OpenGL
 void GLWidget::initializeGL() {
@@ -51,10 +51,38 @@ void GLWidget::initializeGL() {
     glLightfv(GL_LIGHT1, GL_SPECULAR, LightSunFxSpc);	// Set Light1 Ambience
     glEnable(GL_COLOR_MATERIAL); // Enable Color Material
     glEnable(GL_LIGHTING); // Enable Lighting
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+
+    QImage earthImg;
+    if(!earthImg.load("Assets/Earth.bmp")) {
+        exit(1);
+    }
+
+    QImage moonImg;
+    if(!moonImg.load("Assets/Moon.bmp")) {
+        exit(1);
+    }
+
+    QImage earthFormattedImg;
+    earthFormattedImg = QGLWidget::convertToGLFormat(earthImg);
+    if(earthFormattedImg.isNull()) {
+        exit(1);
+    }
+
+    QImage moonFormattedImg;
+    moonFormattedImg = QGLWidget::convertToGLFormat(moonImg);
+    if(moonFormattedImg.isNull()) {
+        exit(1);
+    }
+
+    glGenTextures(2, TextureId);
+    glBindTexture(GL_TEXTURE_2D, TextureId[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, earthFormattedImg.width(), earthFormattedImg.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, earthFormattedImg.bits());
+    glBindTexture(GL_TEXTURE_2D, TextureId[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, moonFormattedImg.width(), moonFormattedImg.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, moonFormattedImg.bits());
 
     quadric = gluNewQuadric(); // Initialize Quadratic
-    gluQuadricNormals(quadric, GL_SMOOTH); // Enable Smooth Normal Generation
-    gluQuadricTexture(quadric, GL_FALSE); // Disable Auto Texture Coords
 }
 
 // This is called when the OpenGL window is resized
@@ -90,7 +118,6 @@ void GLWidget::paintGL() {
     glEnable(GL_LIGHT0); // Enable Light0
     createEarth(); // Create Earth
     createMoon(); // Create Moon
-
     glDisable(GL_LIGHT0); // Disable Light0
 
     glEnable(GL_LIGHT1); // Enable Light1
@@ -108,16 +135,26 @@ void GLWidget::createEarth() {
     // Create the Earth
     glPushMatrix();
 
+    glEnable(GL_TEXTURE_2D); // Enable Texture Use
+    glBindTexture(GL_TEXTURE_2D, TextureId[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glMaterialfv(GL_FRONT, GL_AMBIENT, MatAmb);
     glMaterialfv(GL_FRONT, GL_EMISSION, MatClean);
     glColorMaterial(GL_FRONT, GL_DIFFUSE);
-    glColor3f(0.0f, 0.0f, 1.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
 
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
     glRotatef(23.0f, 0.0f, 1.0f, 0.0f);
     glRotatef(earthRot, 0.0f, 0.0f, 1.0f);
+
+    gluQuadricDrawStyle(quadric, GLU_FILL);
+    gluQuadricNormals(quadric, GL_SMOOTH);
+    gluQuadricTexture(quadric, GL_TRUE);
     gluSphere(quadric, 4, 40, 40);
+    glDisable(GL_TEXTURE_2D); // Disable Texture Use
 
     glPopMatrix();
 
@@ -139,6 +176,11 @@ void GLWidget::createMoon() {
     // Create the Moon
     glPushMatrix();
 
+    glEnable(GL_TEXTURE_2D); // Enable Texture Use
+    glBindTexture(GL_TEXTURE_2D, TextureId[1]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glMaterialfv(GL_FRONT, GL_AMBIENT, MatAmb);
     glMaterialfv(GL_FRONT, GL_EMISSION, MatClean);
@@ -149,7 +191,11 @@ void GLWidget::createMoon() {
     glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
     glRotatef(moonPos, 0.0f, 0.0f, 1.0f);
     glTranslatef(30.0f, 0.0f, 0.0f);
+    gluQuadricDrawStyle(quadric, GLU_FILL);
+    gluQuadricNormals(quadric, GL_SMOOTH);
+    gluQuadricTexture(quadric, GL_TRUE);
     gluSphere(quadric, 1, 20, 20);
+    glDisable(GL_TEXTURE_2D); // Disable Texture Use
 
     glPopMatrix();
 
@@ -157,7 +203,7 @@ void GLWidget::createMoon() {
     if(moonPos < 15 || moonPos > 345) {
         glPushMatrix();
 
-        glColor3f(0.0f, 0.0f, 0.0f);
+        glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
         glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
         glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
         glRotatef(moonPos*9, 0.0f, 0.0f, 1.0f);
