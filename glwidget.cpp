@@ -148,7 +148,7 @@ void GLWidget::createEarth() {
 
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
     glRotatef(23.0f, 0.0f, 1.0f, 0.0f);
-    glRotatef(earthRot, 0.0f, 0.0f, 1.0f);
+    glRotatef(-earthRot, 0.0f, 0.0f, 1.0f);
 
     gluQuadricDrawStyle(quadric, GLU_FILL);
     gluQuadricNormals(quadric, GL_SMOOTH);
@@ -161,7 +161,7 @@ void GLWidget::createEarth() {
     // Create the shadow to the Moon
     glPushMatrix();
 
-    glColor3f(0.0f, 0.0f, 0.0f);
+    glColor4f(0.0f, 0.0f, 0.0f, 0.2f);
     glTranslatef(-30.0f, 0.0f, 0.0f);
     glScalef(0.5f, 0.3f, 1.0f);
     gluSphere(quadric, 9, 80, 80);
